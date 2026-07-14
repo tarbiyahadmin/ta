@@ -1,5 +1,5 @@
 import { urlForSized, sanitySrcSet } from "@/lib/sanity";
-import { programCardPhotos } from "@/lib/siteAssets";
+import { programCardPhotos, type LocalPhoto } from "@/lib/siteAssets";
 
 type ProgramImageSource = {
   mainImage?: unknown;
@@ -11,9 +11,14 @@ function isSanityImage(img: unknown): img is { asset: unknown } {
   return !!img && typeof img === "object" && "asset" in img && !!(img as { asset?: unknown }).asset;
 }
 
+function fallbackPhoto(fallbackIndex = 0): LocalPhoto {
+  const len = programCardPhotos.length;
+  return programCardPhotos[Math.abs(fallbackIndex) % len];
+}
+
 /**
  * Resolves a program card image URL: Sanity `mainImage` when set, otherwise a
- * stable fallback from `/src/assets/mqi-images`.
+ * stable optimized local fallback from `/src/assets/images`.
  */
 export function resolveProgramCardImage(
   prog: ProgramImageSource,
@@ -25,20 +30,25 @@ export function resolveProgramCardImage(
   if (isSanityImage(img)) {
     return urlForSized(img as never, width, height);
   }
-  const len = programCardPhotos.length;
-  const index = Math.abs(fallbackIndex) % len;
-  return programCardPhotos[index];
+  return fallbackPhoto(fallbackIndex).src;
 }
 
-/** Optional srcset when CMS image is present (empty string for local fallbacks). */
+/** Srcset for CMS images or local WebP fallbacks. */
 export function resolveProgramCardSrcSet(
   prog: ProgramImageSource,
   widths: number[],
   aspectHeight: (w: number) => number,
+  fallbackIndex = 0,
 ): string | undefined {
   const img = prog.mainImage;
-  if (!isSanityImage(img)) return undefined;
-  return sanitySrcSet(img as never, widths, aspectHeight);
+  if (isSanityImage(img)) {
+    return sanitySrcSet(img as never, widths, aspectHeight);
+  }
+  return fallbackPhoto(fallbackIndex).srcSet;
+}
+
+export function resolveProgramCardFallback(prog: ProgramImageSource, fallbackIndex = 0): LocalPhoto {
+  return fallbackPhoto(fallbackIndex);
 }
 
 /** Stable index from program id/slug so fallbacks don't reshuffle across re-renders. */

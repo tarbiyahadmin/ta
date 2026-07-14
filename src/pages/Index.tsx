@@ -120,8 +120,7 @@ const Index = () => {
   const aboutTextFull = aboutPage?.instituteText ?? aboutPage?.ourStory ?? "";
   const homeTeachers = (aboutPage?.teachers ?? []) as AboutTeacher[];
   const showAboutSection = !!aboutPage;
-  const aboutFeaturedImage =
-    editorialPhotoUrls.find((url): url is string => !!url) ?? photoEditorialC;
+  const aboutFeaturedImage = editorialPhotoUrls[0] ?? photoEditorialC;
 
   return (
     <main className="relative">

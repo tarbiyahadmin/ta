@@ -2,6 +2,7 @@ import { memo } from "react";
 import { cn } from "@/lib/utils";
 import {
   programCardFallbackIndex,
+  resolveProgramCardFallback,
   resolveProgramCardImage,
   resolveProgramCardSrcSet,
 } from "@/lib/programCardImage";
@@ -17,22 +18,29 @@ type ProgramCardImageProps = {
   size?: "compact" | "listing";
 };
 
-/** CMS mainImage (preferred) or stable mqi-images fallback — responsive when from Sanity. */
+/** CMS mainImage (preferred) or optimized local WebP fallback. */
 function ProgramCardImageComponent({ program, className, size = "compact" }: ProgramCardImageProps) {
-  const width = size === "listing" ? 960 : 640;
-  const height = size === "listing" ? 540 : 400;
+  const width = size === "listing" ? 700 : 640;
+  const height = size === "listing" ? 438 : 400;
   const ratio = height / width;
-  const src = resolveProgramCardImage(
-    program,
-    programCardFallbackIndex(program),
-    width,
-    height,
+  const fallbackIndex = programCardFallbackIndex(program);
+  const localFallback = resolveProgramCardFallback(program, fallbackIndex);
+  const hasCms = !!(
+    program.mainImage &&
+    typeof program.mainImage === "object" &&
+    "asset" in program.mainImage &&
+    (program.mainImage as { asset?: unknown }).asset
   );
-  const srcSet = resolveProgramCardSrcSet(
-    program,
-    size === "listing" ? [480, 720, 960, 1280] : [320, 480, 640, 800],
-    (w) => Math.round(w * ratio),
-  );
+
+  const src = resolveProgramCardImage(program, fallbackIndex, width, height);
+  const srcSet =
+    resolveProgramCardSrcSet(
+      program,
+      size === "listing" ? [400, 700, 1200] : [400, 700],
+      (w) => Math.round(w * ratio),
+      fallbackIndex,
+    ) ?? localFallback.srcSet;
+
   const alt =
     (program.mainImage &&
       typeof program.mainImage === "object" &&
@@ -41,6 +49,9 @@ function ProgramCardImageComponent({ program, className, size = "compact" }: Pro
       (program.mainImage as { alt?: string }).alt) ||
     program.title ||
     "";
+
+  const intrinsicW = hasCms ? width : localFallback.width;
+  const intrinsicH = hasCms ? height : localFallback.height;
 
   return (
     <div className={cn("relative overflow-hidden bg-muted", className)}>
@@ -55,8 +66,8 @@ function ProgramCardImageComponent({ program, className, size = "compact" }: Pro
         alt={alt}
         loading="lazy"
         decoding="async"
-        width={width}
-        height={height}
+        width={intrinsicW}
+        height={intrinsicH}
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
       />
       <div

@@ -1,4 +1,4 @@
-import grainUrl from "@/assets/grain.jpg";
+import { grainUrl } from "@/lib/siteAssets";
 
 const grainTile = {
   backgroundImage: `url(${grainUrl})`,

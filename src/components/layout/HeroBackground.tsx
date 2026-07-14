@@ -1,4 +1,4 @@
-import grainUrl from "@/assets/grain.jpg";
+import { grainUrl } from "@/lib/siteAssets";
 
 /** Layered atmospheric hero background — matches page ground, soft fade into next section. */
 export function HeroBackground() {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import siteLogo from "@/assets/icon.svg";
+import { siteLogoUrl } from "@/lib/siteAssets";
 import { SITE_NAME } from "@/lib/brand";
 import { useQuery } from "@tanstack/react-query";
 import { getSiteSettings } from "@/lib/sanityQueries";
@@ -32,7 +32,14 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b border-border/80 bg-card/95 shadow-sm backdrop-blur-md">
       <div className="container flex h-[4.25rem] items-center justify-between md:h-[5.25rem]">
         <Link to="/" className="flex items-center gap-3">
-          <img src={siteLogo} alt={SITE_NAME} className="h-11 w-auto md:h-[3.25rem]" />
+          <img
+            src={siteLogoUrl}
+            alt={SITE_NAME}
+            className="h-11 w-auto md:h-[3.25rem]"
+            width={256}
+            height={260}
+            decoding="async"
+          />
         </Link>
 
         {/* Desktop nav */}

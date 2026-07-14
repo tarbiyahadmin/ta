@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
-import arabicUrl from "@/assets/arabic.svg";
+import { arabicUrl } from "@/lib/siteAssets";
 
 interface DecorativeArabicProps {
   className?: string;
@@ -46,6 +46,7 @@ export function DecorativeArabic({
             )}
             style={{ opacity }}
             loading="lazy"
+            decoding="async"
           />
         </div>
       </div>
@@ -70,6 +71,7 @@ export function DecorativeArabic({
             tintFilter[tint],
           )}
           loading="lazy"
+          decoding="async"
         />
       </div>
     </div>

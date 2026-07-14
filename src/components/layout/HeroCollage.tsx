@@ -12,6 +12,8 @@ const fadeIn = {
   }),
 };
 
+const collageSizes = "(max-width: 768px) 55vw, min(420px, 38vw)";
+
 /** Four-image hero composition — floats in the hero atmosphere, no card container. */
 export function HeroCollage({ className }: { className?: string }) {
   const [hero, upper, lower, edge] = heroCollagePhotos;
@@ -46,7 +48,17 @@ export function HeroCollage({ className }: { className?: string }) {
         variants={fadeIn}
         className="hero-collage__orb hero-collage__orb--hero"
       >
-        <img src={hero} alt="" loading="eager" decoding="async" />
+        <img
+          src={hero.src}
+          srcSet={hero.srcSet}
+          sizes={collageSizes}
+          alt=""
+          width={hero.width}
+          height={hero.height}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+        />
       </motion.div>
       <motion.div
         custom={1}
@@ -55,7 +67,16 @@ export function HeroCollage({ className }: { className?: string }) {
         variants={fadeIn}
         className="hero-collage__orb hero-collage__orb--upper"
       >
-        <img src={upper} alt="" loading="eager" decoding="async" />
+        <img
+          src={upper.src}
+          srcSet={upper.srcSet}
+          sizes={collageSizes}
+          alt=""
+          width={upper.width}
+          height={upper.height}
+          loading="lazy"
+          decoding="async"
+        />
       </motion.div>
       <motion.div
         custom={2}
@@ -64,7 +85,16 @@ export function HeroCollage({ className }: { className?: string }) {
         variants={fadeIn}
         className="hero-collage__orb hero-collage__orb--lower"
       >
-        <img src={lower} alt="" loading="lazy" decoding="async" />
+        <img
+          src={lower.src}
+          srcSet={lower.srcSet}
+          sizes={collageSizes}
+          alt=""
+          width={lower.width}
+          height={lower.height}
+          loading="lazy"
+          decoding="async"
+        />
       </motion.div>
       <motion.div
         custom={3}
@@ -73,7 +103,16 @@ export function HeroCollage({ className }: { className?: string }) {
         variants={fadeIn}
         className="hero-collage__orb hero-collage__orb--edge"
       >
-        <img src={edge} alt="" loading="lazy" decoding="async" />
+        <img
+          src={edge.src}
+          srcSet={edge.srcSet}
+          sizes={collageSizes}
+          alt=""
+          width={edge.width}
+          height={edge.height}
+          loading="lazy"
+          decoding="async"
+        />
       </motion.div>
     </div>
   );

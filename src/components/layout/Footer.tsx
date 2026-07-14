@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import siteLogo from "@/assets/icon.svg";
+import { siteLogoUrl } from "@/lib/siteAssets";
 import { SITE_NAME } from "@/lib/brand";
 import { useQuery } from "@tanstack/react-query";
 import { getSiteSettings } from "@/lib/sanityQueries";
@@ -45,7 +45,15 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="space-y-4">
-            <img src={siteLogo} alt={SITE_NAME} className="h-12 w-auto" />
+            <img
+              src={siteLogoUrl}
+              alt={SITE_NAME}
+              className="h-12 w-auto"
+              width={256}
+              height={260}
+              loading="lazy"
+              decoding="async"
+            />
             <p className="text-secondary-foreground/70 text-sm leading-relaxed">
               {tagline}
             </p>

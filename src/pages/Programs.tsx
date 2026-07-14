@@ -106,21 +106,35 @@ const Programs = () => {
           </div>
         ) : null}
 
-        <div className="space-y-20 md:space-y-24">
+        <div className="space-y-24 md:space-y-28">
           {filteredCategories.length === 0 ? (
             <p className="py-12 text-center text-muted-foreground">
               {activeCategorySlug ? "No programs found in this category." : "No programs available."}
             </p>
           ) : (
-            filteredCategories.map((cat) => {
+            filteredCategories.map((cat, sectionIndex) => {
               const categoryPrograms = programsByCategoryId[cat._id] ?? [];
               if (categoryPrograms.length === 0) return null;
               return (
-                <section key={cat._id} className="mx-auto max-w-5xl">
-                  <div className="mb-8">
-                    <h2 className="heading-section-sm">{cat.title}</h2>
+                <section
+                  key={cat._id}
+                  className={cn(
+                    "mx-auto max-w-5xl",
+                    sectionIndex > 0 && "border-t border-border/60 pt-20 md:pt-24",
+                  )}
+                >
+                  <div className="mb-10 md:mb-12">
+                    <div className="flex items-end gap-4">
+                      <h2 className="heading-section text-left">{cat.title}</h2>
+                      <span
+                        className="mb-2 hidden h-px flex-1 bg-gradient-to-r from-border to-transparent sm:block"
+                        aria-hidden
+                      />
+                    </div>
                     {cat.description ? (
-                      <p className="mt-2 text-sm text-muted-foreground md:text-base">{cat.description}</p>
+                      <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:mt-5 md:text-lg">
+                        {cat.description}
+                      </p>
                     ) : null}
                   </div>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 lg:gap-8">

@@ -19,7 +19,7 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const FALLBACK_IMAGES = [...galleryPhotos, galleryPhotos[galleryPhotos.length - 1]];
+const FALLBACK_IMAGES = galleryPhotos.map((photo) => photo.src);
 
 const DEFAULT_PAGE_TITLE = "Financial Aid";
 
@@ -109,7 +109,7 @@ const FinancialAid = () => {
 
   const seo = page?.seo;
 
-  const closingFallbackPhoto = ctaBandPhoto;
+  const closingFallbackPhoto = ctaBandPhoto.src;
 
   const meritNeedTarget = meritNeedCta ? resolveCtaButtonTarget(meritNeedCta) : null;
   const applyTarget = applyCta ? resolveCtaButtonTarget(applyCta) : null;
