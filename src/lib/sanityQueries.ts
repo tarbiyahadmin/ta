@@ -85,6 +85,7 @@ export interface ProgramCategory {
   slug: string;
   title: string;
   description?: string;
+  sortOrder?: number;
 }
 
 export interface ProgramFAQ {
@@ -193,6 +194,8 @@ export interface Program {
   category?: { _id: string; title: string; slug?: string };
   mainImage?: { asset?: { url: string }; _type?: string; alt?: string };
   shortDescription?: string;
+  format?: string;
+  ages?: string;
   overview?: string;
   infoCards?: ProgramInfoCard[];
   location?: ProgramLocation;
@@ -407,21 +410,25 @@ const HOMEPAGE_QUERY = `*[_type == "homepage"][0]{
 
 const PROGRAMS_PAGE_QUERY = `*[_type == "programsPage"][0]{ title, subtitle, introContent, seo{ seoTitle, metaDescription } }`;
 
-const PROGRAM_CATEGORIES_QUERY = `*[_type == "programCategory"] | order(title asc){
+const PROGRAM_CATEGORIES_QUERY = `*[_type == "programCategory"] | order(coalesce(sortOrder, 999) asc, title asc){
   _id,
   "slug": slug.current,
   title,
-  description
+  description,
+  sortOrder
 }`;
 
-const PROGRAMS_FOR_LISTING_QUERY = `*[_type == "program"] | order(category->title asc, title asc){
+const PROGRAMS_FOR_LISTING_QUERY = `*[_type == "program"]{
   _id,
   "slug": slug.current,
   title,
   shortDescription,
+  format,
+  ages,
   mainImage ${imageProjection},
-  "category": category->{ _id, title, "slug": slug.current }
-}`;
+  "category": category->{ _id, title, "slug": slug.current, sortOrder },
+  "categorySort": coalesce(category->sortOrder, 999)
+} | order(categorySort asc, title asc)`;
 
 const PROGRAM_BY_SLUG_QUERY = `*[_type == "program" && slug.current == $slug][0]{
   _id,
@@ -431,6 +438,8 @@ const PROGRAM_BY_SLUG_QUERY = `*[_type == "program" && slug.current == $slug][0]
   category->{ _id, title, "slug": slug.current },
   mainImage ${imageProjection},
   shortDescription,
+  format,
+  ages,
   overview,
   infoCards[]{ title, text },
   location{ address, city, province, postalCode },

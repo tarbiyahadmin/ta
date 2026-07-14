@@ -55,6 +55,20 @@ export const program = defineType({
       description: 'Brief summary shown on the Programs listing and homepage cards.',
       rows: 2,
     }),
+    defineField({
+      name: 'format',
+      type: 'string',
+      title: 'Format (card badge)',
+      group: 'content',
+      description: 'Short label shown as a pill under the program title on listing cards (e.g. In-person, In-person & online).',
+    }),
+    defineField({
+      name: 'ages',
+      type: 'string',
+      title: 'Ages (card badge)',
+      group: 'content',
+      description: 'Short age range shown as a pill under the program title on listing cards (e.g. Ages 4–18, Ages 6–16).',
+    }),
     defineField({ name: 'overview', type: 'text', title: 'Overview', group: 'content', validation: (r) => r.required() }),
     defineField({
       name: 'infoCards',
@@ -156,6 +170,30 @@ export const programCategory = defineType({
   fields: [
     defineField({ name: 'slug', type: 'slug', title: 'Slug', validation: (r) => r.required(), options: { source: 'title' } }),
     defineField({ name: 'title', type: 'string', title: 'Title', validation: (r) => r.required() }),
+    defineField({
+      name: 'sortOrder',
+      type: 'number',
+      title: 'Sort order',
+      description: 'Lower numbers appear first on the Programs page (e.g. 1 = Islamic Studies, 2 = Quran, 3 = Islamic Camps).',
+      validation: (r) => r.integer().min(0),
+    }),
     defineField({ name: 'description', type: 'text', title: 'Description' }),
   ],
+  orderings: [
+    {
+      title: 'Sort order',
+      name: 'sortOrderAsc',
+      by: [
+        { field: 'sortOrder', direction: 'asc' },
+        { field: 'title', direction: 'asc' },
+      ],
+    },
+  ],
+  preview: {
+    select: { title: 'title', sortOrder: 'sortOrder' },
+    prepare: ({ title, sortOrder }: { title?: string; sortOrder?: number }) => ({
+      title: title || 'Category',
+      subtitle: typeof sortOrder === 'number' ? `Order: ${sortOrder}` : undefined,
+    }),
+  },
 });

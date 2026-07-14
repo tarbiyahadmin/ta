@@ -49,7 +49,7 @@ function ProgramCardImageComponent({ program, className, size = "compact" }: Pro
         srcSet={srcSet}
         sizes={
           size === "listing"
-            ? "(max-width: 768px) 100vw, min(64rem, 92vw)"
+            ? "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, min(28rem, 46vw)"
             : "(max-width: 640px) 86vw, 340px"
         }
         alt={alt}

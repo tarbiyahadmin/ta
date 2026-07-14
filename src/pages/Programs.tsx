@@ -20,6 +20,8 @@ const fadeUp = {
 const filterChipBase =
   "rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
 
+const badgeBase = "rounded-full px-3 py-1 text-xs font-medium";
+
 const Programs = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategorySlug = searchParams.get("category") ?? null;
@@ -121,27 +123,37 @@ const Programs = () => {
                       <p className="mt-2 text-sm text-muted-foreground md:text-base">{cat.description}</p>
                     ) : null}
                   </div>
-                  <div className="flex flex-col gap-8">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 lg:gap-8">
                     {categoryPrograms.map((prog) => {
                       const categorySlug = prog.category?.slug ?? cat.slug;
                       return (
                         <Link key={prog._id} to={`/programs/${categorySlug}/${prog.slug}`} className="min-w-0">
-                          <Card className="group relative h-full overflow-hidden border-border/50 shadow-md transition-shadow hover:shadow-lg">
+                          <Card className="group relative flex h-full flex-col overflow-hidden border-border/50 shadow-md transition-shadow hover:shadow-lg">
                             <ProgramCardImage
                               program={prog}
-                              className="aspect-[21/9] w-full md:aspect-[21/8]"
+                              className="aspect-[16/10] w-full"
                               size="listing"
                             />
-                            <CardContent className="relative z-[1] flex flex-col space-y-5 p-8 md:p-10">
-                              <h3 className="text-2xl font-semibold leading-snug tracking-tight text-foreground md:text-3xl">
+                            <CardContent className="relative z-[1] flex flex-1 flex-col space-y-3 p-5 md:space-y-4 md:p-6">
+                              <h3 className="text-xl font-semibold leading-snug tracking-tight text-foreground md:text-2xl">
                                 {prog.title}
                               </h3>
+                              {prog.format || prog.ages ? (
+                                <div className="flex flex-wrap gap-2">
+                                  {prog.format ? (
+                                    <span className={cn(badgeBase, "bg-primary/10 text-primary")}>{prog.format}</span>
+                                  ) : null}
+                                  {prog.ages ? (
+                                    <span className={cn(badgeBase, "bg-accent/10 text-accent")}>{prog.ages}</span>
+                                  ) : null}
+                                </div>
+                              ) : null}
                               {prog.shortDescription ? (
-                                <p className="line-clamp-4 text-base leading-relaxed text-muted-foreground md:text-lg">
+                                <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-muted-foreground md:text-base">
                                   {prog.shortDescription}
                                 </p>
                               ) : null}
-                              <span className="inline-flex items-center text-base font-semibold text-primary transition-colors group-hover:text-secondary md:text-lg">
+                              <span className="inline-flex items-center pt-1 text-sm font-semibold text-primary transition-colors group-hover:text-secondary md:text-base">
                                 Learn more →
                               </span>
                             </CardContent>
