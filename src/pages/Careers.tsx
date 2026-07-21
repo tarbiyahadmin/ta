@@ -10,6 +10,7 @@ import { CtaLink } from "@/components/CtaLink";
 import { PageSeo } from "@/components/PageSeo";
 import { PageTitle } from "@/components/layout/PageTitle";
 import { DecorativeArabic } from "@/components/layout/DecorativeArabic";
+import { ScheduleBlocks, enrollmentPlansSectionTitle } from "@/components/ScheduleBlocks";
 import { SEO_TITLE_SUFFIX, SITE_NAME } from "@/lib/brand";
 
 const fadeUp = {
@@ -38,6 +39,8 @@ const Careers = () => {
   const applicationPath =
     role?.applicationFormPage?.slug != null ? formPagePath(role.applicationFormPage.slug) : null;
   const seo = careersPageData?.seo;
+  const infoCards = role?.infoCards ?? [];
+  const scheduleBlocks = role?.scheduleBlocks ?? [];
 
   return (
     <main className="section-soft-radial section-y relative overflow-hidden">
@@ -66,7 +69,7 @@ const Careers = () => {
 
         {!selectedRole ? (
           <div className="mx-auto flex max-w-5xl flex-col gap-8">
-            {roles.map((r, i) => {
+            {roles.map((r) => {
               return (
                 <div key={r._id}>
                   <Card
@@ -106,12 +109,20 @@ const Careers = () => {
                 <h2 className="mt-4 mb-3 text-4xl font-bold tracking-tight text-foreground md:text-5xl">{role.title}</h2>
                 <p className="mb-10 text-lg leading-relaxed text-muted-foreground">{role.description}</p>
 
-                {role.positionDetails && (
-                  <section className="mb-10">
-                    <h3 className="mb-4 text-2xl font-semibold text-foreground">Position Details</h3>
-                    <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">{role.positionDetails}</p>
+                {infoCards.length > 0 ? (
+                  <section className="mb-12 md:mb-14">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {infoCards.map((card, i) => (
+                        <Card key={`${card.title}-${i}`} className="border-border/50 bg-card/80 shadow-sm">
+                          <CardContent className="space-y-1.5 p-5 md:p-6">
+                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{card.title}</p>
+                            <p className="text-sm font-medium leading-relaxed text-foreground md:text-base">{card.text}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </section>
-                )}
+                ) : null}
 
                 {role.responsibilities && role.responsibilities.length > 0 && (
                   <section className="mb-10">
@@ -141,14 +152,13 @@ const Careers = () => {
                   </section>
                 )}
 
-                {role.whatAcademyOffers && (
-                  <section className="mb-12">
-                    <h3 className="mb-4 text-2xl font-semibold text-foreground">What {SITE_NAME} Offers</h3>
-                    <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">{role.whatAcademyOffers}</p>
+                {scheduleBlocks.length > 0 ? (
+                  <section className="mb-12 md:mb-14">
+                    <h2 className="heading-section-sm mb-6">{enrollmentPlansSectionTitle(scheduleBlocks, "Schedule")}</h2>
+                    <ScheduleBlocks blocks={scheduleBlocks} />
                   </section>
-                )}
+                ) : null}
 
-                {/* Apply CTA */}
                 <section className="mt-12">
                   <h3 className="mb-3 text-3xl font-semibold text-foreground">{applyFormTitle}</h3>
                   <p className="mb-5 text-base text-muted-foreground">

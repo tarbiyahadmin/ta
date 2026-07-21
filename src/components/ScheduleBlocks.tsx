@@ -197,7 +197,10 @@ export function ScheduleBlocks({ blocks }: EnrollmentPlansProps) {
 }
 
 /** Prefer CMS section title from the first enrollment-plans block. */
-export function enrollmentPlansSectionTitle(blocks: ScheduleBlock[] | undefined): string {
+export function enrollmentPlansSectionTitle(
+  blocks: ScheduleBlock[] | undefined,
+  fallback = "Enrollment Plans",
+): string {
   const block = blocks?.find((b) => b._type === "scheduleBlockProgramOptions");
-  return block?.blockTitle?.trim() || "Enrollment Plans";
+  return block?.blockTitle?.trim() || fallback;
 }

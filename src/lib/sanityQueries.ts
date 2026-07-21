@@ -248,10 +248,10 @@ export interface CareerRole {
   type: string;
   location?: string;
   description?: string;
-  positionDetails?: string;
+  infoCards?: ProgramInfoCard[];
   responsibilities?: string[];
-  whatAcademyOffers?: string;
   requirements?: string[];
+  scheduleBlocks?: ScheduleBlock[];
   applicationFormPage?: FormPageRef | null;
 }
 
@@ -514,10 +514,33 @@ const CAREER_ROLES_QUERY = `*[_type == "careerRole"] | order(title asc){
   type,
   location,
   description,
-  positionDetails,
+  infoCards[]{ title, text },
   responsibilities,
-  "whatAcademyOffers": coalesce(whatAcademyOffers, whatMqiOffers),
   requirements,
+  scheduleBlocks[_type == "scheduleBlockProgramOptions"]{
+    _type,
+    _key,
+    blockTitle,
+    intro,
+    options[]{
+      title,
+      fee,
+      details[]{ label, value },
+      scheduleTables[]{
+        title,
+        columns[]{ heading },
+        dataRows[]{ cells[]{ value } },
+        rows[]{ label, value }
+      },
+      label,
+      format,
+      frequency,
+      duration,
+      note,
+      monthlyFee,
+      price
+    }
+  },
   applicationFormPage->{ "slug": slug.current }
 }`;
 
